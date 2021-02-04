@@ -1,22 +1,27 @@
 package podcast.infrastructure.api
 
+import org.scalatest.OptionValues._
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.must.Matchers._
+import sttp.model.Method.GET
 
 class PodcastApiSpec extends AnyFlatSpec {
 
-  "tapir" should "be loaded in classpath" in {
-    withClue("""Many of tapir functionalities come as builder methods in the main package, hence it’s easiest to work
-               |with tapir if you import the main package entirely.
-               |
-               |To fix this test you should import "com.softwaremill.sttp.tapir" %% "tapir-core" % "0.17.9" into your
-               |build.sbt.
-               |
-               |""".stripMargin) {
+  private lazy val podcastApi = new PodcastApi()
 
-      "import sttp.tapir._" must compile
+  "PodcastApi" should "define endpoint for getting all categories" in {
+    podcastApi.getCategoriesEndPoint.info.name.value mustBe "all categories"
+    podcastApi.getCategoriesEndPoint.info.description.value mustBe "get all categories and number of occurrences of podcasts for each categorie"
+    podcastApi.getCategoriesEndPoint.info.summary.value mustBe "get all categories"
+    podcastApi.getCategoriesEndPoint.info.tags must contain only "categorie"
+  }
 
-    }
+  it should "define http method for getting all categories" in {
+    podcastApi.getCategoriesEndPoint.httpMethod.value mustBe GET
+  }
+
+  it should "define input as a simple path for getting all categories" in {
+    podcastApi.getCategoriesEndPoint.input.show mustBe "GET /api /v1 /categories"
   }
 
 }
