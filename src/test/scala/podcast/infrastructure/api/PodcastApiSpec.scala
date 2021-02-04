@@ -4,6 +4,9 @@ import org.scalatest.OptionValues._
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.must.Matchers._
 import sttp.model.Method.GET
+import sttp.tapir.DecodeResult.Value
+import sttp.tapir.EndpointIO.Body
+import sttp.tapir.EndpointOutput.Pair
 
 class PodcastApiSpec extends AnyFlatSpec {
 
@@ -22,6 +25,17 @@ class PodcastApiSpec extends AnyFlatSpec {
 
   it should "define input as a simple path for getting all categories" in {
     podcastApi.getCategoriesEndPoint.input.show mustBe "GET /api /v1 /categories"
+  }
+
+  it should "define output as a JSON object for getting all categories" in {
+    val output = podcastApi.getCategoriesEndPoint.output.asInstanceOf[Pair[_, _, _]].right
+    val codec = output.asInstanceOf[Body[String, Map[String, Int]]].codec
+
+    val decodedResult = codec.decode("""{"Talk Radio": 1, "": 8}""")
+
+    val decoded = PartialFunction.condOpt(decodedResult) { case Value(categories) => categories }
+    decoded.value mustBe Map("Talk Radio" -> 1, "" -> 8)
+    podcastApi.getCategoriesEndPoint.output.show mustBe "{body as application/json (UTF-8)}"
   }
 
 }
