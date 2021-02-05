@@ -23,5 +23,9 @@ Tapir support [many JSON libraries][tapirJSON]. We will use Play JSON to define 
 
 With an endpoint definition, we can add a specific implementation and wire it to a server like akka-http.
 
+## Step 5: generate open api
+
+Starting from endpoints, you can generate openapi contract automatically.
+
 [Tapir]: https://tapir.softwaremill.com
 [TapirJSON]: https://tapir.softwaremill.com/en/latest/endpoint/json.html
