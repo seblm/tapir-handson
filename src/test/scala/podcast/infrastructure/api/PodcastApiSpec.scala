@@ -91,7 +91,17 @@ class PodcastApiSpec extends AnyFlatSpec {
     warnNeedServerUp {
       val `swagger-ui` = Try("curl --silent localhost:8080/docs/index.html".!!)
 
-      `swagger-ui`.success.value must include("""<title>Swagger UI</title>""")
+      `swagger-ui`.success.value must include("<title>Swagger UI</title>")
+    }
+  }
+
+  it should "expose OpenAPI contract with redoc" in {
+    import sys.process._
+
+    warnNeedServerUp {
+      val `swagger-ui` = Try("curl --silent localhost:8080".!!)
+
+      `swagger-ui`.success.value must include("<title>Redoc - Podcast API</title>")
     }
   }
 

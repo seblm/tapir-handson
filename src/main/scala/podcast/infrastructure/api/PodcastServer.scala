@@ -8,6 +8,7 @@ import akka.http.scaladsl.server.Directives.{complete, get, path}
 import akka.http.scaladsl.server.RouteConcatenation._
 import podcast.infrastructure.csv.PodcastCSV
 import sttp.tapir.server.akkahttp.AkkaHttpServerInterpreter
+import sttp.tapir.swagger.akkahttp.SwaggerAkka
 
 import scala.concurrent.ExecutionContextExecutor
 import scala.io.StdIn
@@ -27,11 +28,16 @@ object PodcastServer {
             ContentTypes.`text/html(UTF-8)`,
             """<html>
               |<h1>Podcast API</h1>
+              |<ul>
+              | <li><a href="/docs/index.html?url=/docs/docs.yaml">swagger-ui</a></li>
+              |</ul>
               |</html>""".stripMargin
           )
         )
       }
-    } ~ AkkaHttpServerInterpreter.toRoute(api.getCategoriesEndPointServer)
+    } ~
+      AkkaHttpServerInterpreter.toRoute(api.getCategoriesEndPointServer) ~
+      new SwaggerAkka(api.yamlDocs).routes
     val bindingFuture = Http().newServerAt("localhost", 8080).bind(route)
 
     println(s"Server online at http://localhost:8080/index.html\nPress RETURN to stop...")

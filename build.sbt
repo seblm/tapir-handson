@@ -16,5 +16,6 @@ lazy val root = (project in file("."))
     libraryDependencies += `tapir-json-play`,
     libraryDependencies += `tapir-openapi-circe-yaml`,
     libraryDependencies += `tapir-openapi-docs`,
+    libraryDependencies += `tapir-swagger-ui-akka-http`,
     libraryDependencies += scalatest % Test
   )
