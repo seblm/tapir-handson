@@ -27,5 +27,9 @@ With an endpoint definition, we can add a specific implementation and wire it to
 
 Starting from endpoints, you can generate openapi contract automatically.
 
+## Step 6: expose OpenAPI with swagger-ui
+
+Tapir lets you expose your OpenAPI on your web server.
+
 [Tapir]: https://tapir.softwaremill.com
 [TapirJSON]: https://tapir.softwaremill.com/en/latest/endpoint/json.html

@@ -45,7 +45,7 @@ class PodcastApiSpec extends AnyFlatSpec {
   it should "expose endpoint with akka-http" in {
     import sys.process._
 
-    withClue("please start your server: main class is podcast.infrastructure.api.PodcastServer") {
+    warnNeedServerUp {
       val categories = Try("curl --silent localhost:8080/api/v1/categories".!!).success.value
 
       categories must startWith("""{"""")
@@ -84,5 +84,19 @@ class PodcastApiSpec extends AnyFlatSpec {
         |        type: integer
         |""".stripMargin
   }
+
+  it should "expose OpenAPI contract with swagger-ui" in {
+    import sys.process._
+
+    warnNeedServerUp {
+      val `swagger-ui` = Try("curl --silent localhost:8080/docs/index.html".!!)
+
+      `swagger-ui`.success.value must include("""<title>Swagger UI</title>""")
+    }
+  }
+
+  private def warnNeedServerUp[T]: (=> T) => T =
+    withClue[T]("""Please start your server: main class is podcast.infrastructure.api.PodcastServer
+                  |""".stripMargin)
 
 }
