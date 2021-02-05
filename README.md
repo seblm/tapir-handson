@@ -19,5 +19,9 @@ We will define our first endpoint. It takes no parameters.
 
 Tapir support [many JSON libraries][tapirJSON]. We will use Play JSON to define output format.  
 
+## Step 4: expose endpoint with akka-http 
+
+With an endpoint definition, we can add a specific implementation and wire it to a server like akka-http.
+
 [Tapir]: https://tapir.softwaremill.com
 [TapirJSON]: https://tapir.softwaremill.com/en/latest/endpoint/json.html

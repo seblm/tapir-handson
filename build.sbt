@@ -12,5 +12,6 @@ lazy val root = (project in file("."))
     libraryDependencies += `akka-http`,
     libraryDependencies += `akka-stream`,
     libraryDependencies += `tapir-core`,
+    libraryDependencies += `tapir-json-play`,
     libraryDependencies += scalatest % Test
   )

@@ -1,16 +1,20 @@
 package podcast.infrastructure.api
 
 import org.scalatest.OptionValues._
+import org.scalatest.TryValues._
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.must.Matchers._
+import podcast.infrastructure.csv.PodcastCSV
 import sttp.model.Method.GET
 import sttp.tapir.DecodeResult.Value
 import sttp.tapir.EndpointIO.Body
 import sttp.tapir.EndpointOutput.Pair
 
+import scala.util.Try
+
 class PodcastApiSpec extends AnyFlatSpec {
 
-  private lazy val podcastApi = new PodcastApi()
+  private lazy val podcastApi = new PodcastApi(new PodcastCSV("depot-legal-du-web-liste-podcasts-10.csv"))
 
   "PodcastApi" should "define endpoint for getting all categories" in {
     podcastApi.getCategoriesEndPoint.info.name.value mustBe "all categories"
@@ -36,6 +40,18 @@ class PodcastApiSpec extends AnyFlatSpec {
     val decoded = PartialFunction.condOpt(decodedResult) { case Value(categories) => categories }
     decoded.value mustBe Map("Talk Radio" -> 1, "" -> 8)
     podcastApi.getCategoriesEndPoint.output.show mustBe "{body as application/json (UTF-8)}"
+  }
+
+  it should "expose endpoint with akka-http" in {
+    import sys.process._
+
+    withClue("please start your server: main class is podcast.infrastructure.api.PodcastServer") {
+      val categories = Try("curl --silent localhost:8080/api/v1/categories".!!).success.value
+
+      categories must startWith("""{"""")
+      categories must endWith("}\n")
+      categories must include(""","Talk Radio":41,"""")
+    }
   }
 
 }
