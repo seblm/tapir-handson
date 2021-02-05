@@ -7,6 +7,7 @@ import akka.http.scaladsl.model.{ContentTypes, HttpEntity}
 import akka.http.scaladsl.server.Directives.{complete, get, path}
 import akka.http.scaladsl.server.RouteConcatenation._
 import podcast.infrastructure.csv.PodcastCSV
+import sttp.tapir.redoc.akkahttp.RedocAkkaHttp
 import sttp.tapir.server.akkahttp.AkkaHttpServerInterpreter
 import sttp.tapir.swagger.akkahttp.SwaggerAkka
 
@@ -30,6 +31,7 @@ object PodcastServer {
               |<h1>Podcast API</h1>
               |<ul>
               | <li><a href="/docs/index.html?url=/docs/docs.yaml">swagger-ui</a></li>
+              | <li><a href="/">redoc</a></li>
               |</ul>
               |</html>""".stripMargin
           )
@@ -37,7 +39,8 @@ object PodcastServer {
       }
     } ~
       AkkaHttpServerInterpreter.toRoute(api.getCategoriesEndPointServer) ~
-      new SwaggerAkka(api.yamlDocs).routes
+      new SwaggerAkka(api.yamlDocs).routes ~
+      new RedocAkkaHttp("Redoc - Podcast API", api.yamlDocs).routes
     val bindingFuture = Http().newServerAt("localhost", 8080).bind(route)
 
     println(s"Server online at http://localhost:8080/index.html\nPress RETURN to stop...")

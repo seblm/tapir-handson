@@ -35,5 +35,9 @@ Tapir lets you expose your OpenAPI on your web server.
 
 You can also expose your OpenAPI with redoc.
 
+## Step 8: secure endpoints
+
+We will add a simple authentication system.
+
 [Tapir]: https://tapir.softwaremill.com
 [TapirJSON]: https://tapir.softwaremill.com/en/latest/endpoint/json.html
