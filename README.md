@@ -39,5 +39,11 @@ You can also expose your OpenAPI with redoc.
 
 We will add a simple authentication system.
 
+## Step 9: customize Schema
+
+## Step 10: handle ADT oneOf
+
+## Step 11: recursive schemas
+
 [Tapir]: https://tapir.softwaremill.com
 [TapirJSON]: https://tapir.softwaremill.com/en/latest/endpoint/json.html
