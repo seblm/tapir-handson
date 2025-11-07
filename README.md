@@ -11,4 +11,8 @@ import the main package entirely, i.e.:
 import sttp.tapir.*
 ```
 
+## Step 2: define your first endpoint
+
+We will define our first endpoint. It takes no parameters.
+
 [Tapir]: https://tapir.softwaremill.com
