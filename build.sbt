@@ -8,5 +8,10 @@ lazy val root = project
 
     scalaVersion := scala3Version,
 
-    libraryDependencies += "org.scalameta" %% "munit" % "1.0.0" % Test
+    libraryDependencies += "ch.qos.logback" % "logback-classic" % "1.5.20" % Runtime,
+    libraryDependencies += "org.apache.pekko" %% "pekko-actor-typed" % "1.2.1",
+    libraryDependencies += "org.apache.pekko" %% "pekko-http" % "1.3.0",
+    libraryDependencies += "org.apache.pekko" %% "pekko-stream" % "1.2.1",
+    libraryDependencies += "org.scalameta" %% "munit" % "1.2.1" % Test,
+    libraryDependencies += "org.slf4j" % "slf4j-api" % "2.0.17"
   )
