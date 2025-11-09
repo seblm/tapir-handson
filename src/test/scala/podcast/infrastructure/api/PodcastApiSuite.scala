@@ -33,3 +33,16 @@ class PodcastApiSuite extends FunSuite:
       "GET /api /v1 /categories",
       """The simple path of your input is not correct. An input as a simple path could be defined as: endpoint.in("path" / "to" / "resource")"""
     )
+
+  test("tapir-json-play should be loaded in classpath"):
+    assertEquals(
+      compileErrors("import sttp.tapir.json.play.*"),
+      "",
+      """We need to produce JSON. For this we will use tapir-play-json. All that you'll need to do to use it for your
+        |endpoint definition is to import http.tapir.json.play.* next.
+        |
+        |To fix this test you should import "com.softwaremill.sttp.tapir" %% "tapir-json-play" % "1.12.2" into your
+        |build.sbt.
+        |
+        |""".stripMargin
+    )

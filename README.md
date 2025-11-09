@@ -15,4 +15,9 @@ import sttp.tapir.*
 
 We will define our first endpoint. It takes no parameters.
 
+## Step 3: use Play Json library
+
+Tapir support [many JSON libraries][tapirJSON]. We will use Play JSON to define output format.
+
 [Tapir]: https://tapir.softwaremill.com
+[TapirJSON]: https://tapir.softwaremill.com/en/latest/endpoint/json.html
