@@ -1,6 +1,12 @@
 package podcast.infrastructure.api
 
 import munit.FunSuite
+import sttp.tapir.DecodeResult.{Value, Failure as TapirDecodingFailure}
+import sttp.tapir.EndpointIO.Body
+import sttp.tapir.EndpointOutput.Pair
+import sttp.tapir.{Codec, CodecFormat}
+
+import scala.util.{Failure, Success, Try}
 
 class PodcastApiSuite extends FunSuite:
 
@@ -34,15 +40,24 @@ class PodcastApiSuite extends FunSuite:
       """The simple path of your input is not correct. An input as a simple path could be defined as: endpoint.in("path" / "to" / "resource")"""
     )
 
-  test("tapir-json-play should be loaded in classpath"):
-    assertEquals(
-      compileErrors("import sttp.tapir.json.play.*"),
-      "",
-      """We need to produce JSON. For this we will use tapir-play-json. All that you'll need to do to use it for your
-        |endpoint definition is to import http.tapir.json.play.* next.
-        |
-        |To fix this test you should import "com.softwaremill.sttp.tapir" %% "tapir-json-play" % "1.12.2" into your
-        |build.sbt.
-        |
-        |""".stripMargin
-    )
+  test("PodcastApi should define output as a JSON object for getting all categories"):
+    val codec: Codec[String, Map[String, Int], CodecFormat] = Try:
+      val output = podcastApi.getCategoriesEndPoint.output.asInstanceOf[Pair[?, ?, ?]]
+      output.right.asInstanceOf[Body[String, Map[String, Int]]].codec
+    match
+      case Failure(exception) =>
+        fail(
+          """The output definition is not a EndpointIO.Body[String, Map[String, Int]]. An output as a json body could be
+            |defined as: endpoint.out(jsonBody[ProducedType])""".stripMargin,
+          exception
+        )
+      case Success(value) => value
+
+    val result = codec.decode("""{"TalkRadio": 1, "": 8}""")
+
+    result match
+      case failure: TapirDecodingFailure =>
+        fail(s"The output definition is not a jsonBody[Map[String, Int]]: $failure.")
+      case Value(categories) =>
+        assertEquals(categories, Map("TalkRadio" -> 1, "" -> 8))
+        assertEquals(podcastApi.getCategoriesEndPoint.output.show, "{body as application/json (UTF-8)}")
