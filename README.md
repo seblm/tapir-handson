@@ -19,5 +19,10 @@ We will define our first endpoint. It takes no parameters.
 
 Tapir support [many JSON libraries][tapirJSON]. We will use Play JSON to define output format.
 
+## Step 4: define endpoint’s output
+
+The endpoint will have to produce a JSON body as a JSON Object with dynamic keys and JSON Numbers as values. We will
+define this contract with Tapir.
+
 [Tapir]: https://tapir.softwaremill.com
 [TapirJSON]: https://tapir.softwaremill.com/en/latest/endpoint/json.html
