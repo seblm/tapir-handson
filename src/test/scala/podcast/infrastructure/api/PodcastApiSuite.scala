@@ -84,3 +84,17 @@ class PodcastApiSuite extends FunSuite:
         |Please import "com.softwaremill.sttp.tapir" %% "tapir-pekko-http-server" % "1.12.4".
         |""".stripMargin
     )
+
+  test("PodcastApi should expose endpoint with pekko-http"):
+    import sys.process.*
+
+    Try("curl --silent localhost:8080/api/v1/categories".!!) match
+
+      case Failure(exception) =>
+        fail("Please start your server: main entry point is podcast.infrastructure.api.PodcastServer.main.", exception)
+      case Success(categories) =>
+        assert(
+          categories.contains(""","Talk Radio":41,""""),
+          """Please use PekkoHttpServerInterpreter to declare the Tapir endpoint implementation to pekko-http routes:
+            |} ~ PekkoHttpServerInterpreter().toRoute(…)""".stripMargin
+        )

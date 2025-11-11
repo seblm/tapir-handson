@@ -39,6 +39,14 @@ sttp.tapir.server.pekkohttp.PekkoHttpServerInterpreter
 
 Please have a look to [documentation][TapirPekkoHttp] for more information.
 
+## Step 7: use Tapir’s pekko-http server interpreter to declare route
+
+Add endpoint implementation to pekko-http’s routes:
+
+```scala
+} ~ PekkoHttpServerInterpreter.toRoute(…)
+```
+
 [Tapir]: https://tapir.softwaremill.com
 [TapirJSON]: https://tapir.softwaremill.com/en/latest/endpoint/json.html
 [TapirPekkoHttp]: https://tapir.softwaremill.com/en/latest/server/pekkohttp.html
