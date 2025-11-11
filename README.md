@@ -24,5 +24,9 @@ Tapir support [many JSON libraries][tapirJSON]. We will use Play JSON to define 
 The endpoint will have to produce a JSON body as a JSON Object with dynamic keys and JSON Numbers as values. We will
 define this contract with Tapir.
 
+## Step 5: define endpoint’s server logic
+
+An endpoint can be derived to be a server implementation by adding server logic.
+
 [Tapir]: https://tapir.softwaremill.com
 [TapirJSON]: https://tapir.softwaremill.com/en/latest/endpoint/json.html

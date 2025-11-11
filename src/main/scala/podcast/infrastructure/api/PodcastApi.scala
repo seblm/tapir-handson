@@ -1,14 +1,21 @@
 package podcast.infrastructure.api
 
+import podcast.domain.PodcastRepository
 import sttp.tapir.*
 import sttp.tapir.json.play.*
+import sttp.tapir.server.ServerEndpoint.Full
 
-class PodcastApi:
+import scala.concurrent.Future
 
-  val getCategoriesEndPoint = endpoint
+class PodcastApi(repository: PodcastRepository):
+
+  val getCategoriesEndPoint: Endpoint[Unit, Unit, Unit, Map[String, Int], Any] = endpoint
     .name("all categories")
     .description("get all categories and number of occurrences of podcasts for each categorie")
     .summary("get all categories")
     .tag("categorie")
     .get
     .in("api" / "v1" / "categories")
+    .out(jsonBody[Map[String, Int]])
+
+  lazy val getCategoriesServerEndpoint: Full[Unit, Unit, Unit, Unit, Map[String, Int], Any, Future] = ???
