@@ -1,6 +1,8 @@
 package podcast.infrastructure.api
 
 import munit.FunSuite
+import podcast.infrastructure.csv.PodcastCSV
+import sttp.monad.FutureMonad
 import sttp.tapir.DecodeResult.{Value, Failure as TapirDecodingFailure}
 import sttp.tapir.EndpointIO.Body
 import sttp.tapir.EndpointOutput.Pair
@@ -10,7 +12,7 @@ import scala.util.{Failure, Success, Try}
 
 class PodcastApiSuite extends FunSuite:
 
-  private val podcastApi = new PodcastApi()
+  private val podcastApi = new PodcastApi(new PodcastCSV("depot-legal-du-web-liste-podcasts-10.csv"))
 
   test("PodcastApi should define a name for the endpoint that get all categories"):
     assert(podcastApi.getCategoriesEndPoint.info.name.isDefined, "A name definition is missing for the endpoint.")
@@ -60,3 +62,15 @@ class PodcastApiSuite extends FunSuite:
       case Value(categories) =>
         assertEquals(categories, Map("TalkRadio" -> 1, "" -> 8))
         assertEquals(podcastApi.getCategoriesEndPoint.output.show, "{body as application/json (UTF-8)}")
+
+  test("PodcastApi should define server endpoint"):
+    import scala.concurrent.ExecutionContext.Implicits.global
+    assert(
+      Try(podcastApi.getCategoriesServerEndpoint).isSuccess,
+      """
+        |Define server endpoint by calling serverLogic on getCategoriesEndPoint.""".stripMargin
+    )
+    podcastApi.getCategoriesServerEndpoint
+      .logic(new FutureMonad()(using global))(())(())
+      .map: value =>
+        assertEquals(value.getOrElse(Map.empty), Map("" -> 8, "Talk Radio" -> 1))
