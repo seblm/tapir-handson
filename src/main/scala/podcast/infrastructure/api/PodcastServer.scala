@@ -5,8 +5,12 @@ import org.apache.pekko.actor.typed.ActorSystem
 import org.apache.pekko.actor.typed.scaladsl.Behaviors
 import org.apache.pekko.http.scaladsl.Http
 import org.apache.pekko.http.scaladsl.model.{ContentTypes, HttpEntity}
-import org.apache.pekko.http.scaladsl.server.Directives.{complete, get, path}
+import org.apache.pekko.http.scaladsl.server.Directives.*
+import org.apache.pekko.http.scaladsl.server.RouteConcatenation.given
 import org.slf4j.LoggerFactory
+import podcast.domain.PodcastRepository
+import podcast.infrastructure.csv.PodcastCSV
+import sttp.tapir.server.pekkohttp.PekkoHttpServerInterpreter
 
 import scala.concurrent.ExecutionContextExecutor
 import scala.io.StdIn
@@ -20,6 +24,7 @@ object PodcastServer:
     // needed for the future flatMap/onComplete in the end
     implicit val executionContext: ExecutionContextExecutor = system.executionContext
 
+    val api = new PodcastApi(new PodcastCSV("depot-legal-du-web-liste-podcasts.csv"))
     val route = path("index.html") {
       get {
         complete(
@@ -31,7 +36,7 @@ object PodcastServer:
           )
         )
       }
-    }
+    } ~ path("api" / "v1" / "categories")(get(complete(HttpEntity(ContentTypes.`application/json`, "{\"replace\":0}"))))
     val bindingFuture = Http().newServerAt("localhost", 8080).bind(route)
 
     logger.info(s"Server now online. Please navigate to http://localhost:8080/index.html")
