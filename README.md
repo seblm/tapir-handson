@@ -28,5 +28,17 @@ define this contract with Tapir.
 
 An endpoint can be derived to be a server implementation by adding server logic.
 
+## Step 6: get Tapir’s pekko-http server interpreter dependency
+
+In order for pekko-http to automatically convert ServerEndpoints to pekko-http route, you have to import a new
+dependency. Then you can use this object:
+
+```scala
+sttp.tapir.server.pekkohttp.PekkoHttpServerInterpreter
+```
+
+Please have a look to [documentation][TapirPekkoHttp] for more information.
+
 [Tapir]: https://tapir.softwaremill.com
 [TapirJSON]: https://tapir.softwaremill.com/en/latest/endpoint/json.html
+[TapirPekkoHttp]: https://tapir.softwaremill.com/en/latest/server/pekkohttp.html

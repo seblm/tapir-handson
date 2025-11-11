@@ -18,4 +18,5 @@ class PodcastApi(repository: PodcastRepository):
     .in("api" / "v1" / "categories")
     .out(jsonBody[Map[String, Int]])
 
-  lazy val getCategoriesServerEndpoint: Full[Unit, Unit, Unit, Unit, Map[String, Int], Any, Future] = ???
+  lazy val getCategoriesServerEndpoint: Full[Unit, Unit, Unit, Unit, Map[String, Int], Any, Future] =
+    getCategoriesEndPoint.serverLogic(_ => Future.successful(Right(repository.getCategories)))

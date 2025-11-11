@@ -74,3 +74,14 @@ class PodcastApiSuite extends FunSuite:
       .logic(new FutureMonad()(using global))(())(())
       .map: value =>
         assertEquals(value.getOrElse(Map.empty), Map("" -> 8, "Talk Radio" -> 1))
+
+  test("PodcastServer should use the Tapir's pekko-http server interpreter to expose endpoints"):
+    assertEquals(
+      compileErrors("import sttp.tapir.server.pekkohttp.PekkoHttpServerInterpreter"),
+      "",
+      """
+        |In order for pekko-http to automatically convert ServerEndpoints to pekko http route, you have to import a new
+        |dependency.
+        |Please import "com.softwaremill.sttp.tapir" %% "tapir-pekko-http-server" % "1.12.2".
+        |""".stripMargin
+    )
