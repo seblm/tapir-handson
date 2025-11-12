@@ -9,8 +9,10 @@ lazy val root = project
     scalaVersion := scala3Version,
 
     libraryDependencies += "ch.qos.logback" % "logback-classic" % "1.5.20" % Runtime,
+    libraryDependencies += "com.softwaremill.sttp.apispec" %% "openapi-circe-yaml" % "0.11.10",
     libraryDependencies += "com.softwaremill.sttp.tapir" %% "tapir-core" % "1.12.2",
     libraryDependencies += "com.softwaremill.sttp.tapir" %% "tapir-json-play" % "1.12.2",
+    libraryDependencies += "com.softwaremill.sttp.tapir" %% "tapir-openapi-docs" % "1.12.2",
     libraryDependencies += "com.softwaremill.sttp.tapir" %% "tapir-pekko-http-server" % "1.12.2",
     libraryDependencies += "org.apache.pekko" %% "pekko-actor-typed" % "1.2.1",
     libraryDependencies += "org.apache.pekko" %% "pekko-http" % "1.3.0",

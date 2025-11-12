@@ -36,7 +36,7 @@ object PodcastServer:
           )
         )
       }
-    } ~ path("api" / "v1" / "categories")(get(complete(HttpEntity(ContentTypes.`application/json`, "{\"replace\":0}"))))
+    } ~ PekkoHttpServerInterpreter().toRoute(api.getCategoriesServerEndpoint)
     val bindingFuture = Http().newServerAt("localhost", 8080).bind(route)
 
     logger.info(s"Server now online. Please navigate to http://localhost:8080/index.html")
