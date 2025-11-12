@@ -34,7 +34,7 @@ object PodcastServer:
             |</html>""".stripMargin
         )
       )
-  ~ path("api" / "v1" / "categories")(get(complete(HttpEntity(ContentTypes.`application/json`, "{\"replace\":0}"))))
+  ~ PekkoHttpServerInterpreter().toRoute(api.getCategoriesServerEndpoint)
 
   @main def main(): Unit =
     val bindingFuture = Http().newServerAt("localhost", 8080).bind(route)

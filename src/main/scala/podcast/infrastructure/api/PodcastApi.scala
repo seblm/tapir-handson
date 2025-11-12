@@ -1,7 +1,9 @@
 package podcast.infrastructure.api
 
 import podcast.domain.PodcastRepository
+import sttp.apispec.openapi.circe.yaml.given
 import sttp.tapir.*
+import sttp.tapir.docs.openapi.OpenAPIDocsInterpreter
 import sttp.tapir.json.play.*
 import sttp.tapir.server.ServerEndpoint.Full
 
@@ -20,3 +22,5 @@ class PodcastApi(repository: PodcastRepository):
 
   lazy val getCategoriesServerEndpoint: Full[Unit, Unit, Unit, Unit, Map[String, Int], Any, Future] =
     getCategoriesEndPoint.serverLogicSuccessPure(_ => repository.getCategories)
+
+  val yamlDocs: String = "Please replace this String by the Open API specification."

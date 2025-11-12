@@ -47,6 +47,11 @@ Add endpoint implementation to pekko-http’s routes:
 } ~ PekkoHttpServerInterpreter.toRoute(…)
 ```
 
+## Step 8: generate open api
+
+Starting from endpoints, you can [generate openapi contract automatically][TapirOpenAPI].
+
 [Tapir]: https://tapir.softwaremill.com
 [TapirJSON]: https://tapir.softwaremill.com/en/latest/endpoint/json.html
+[TapirOpenAPI]: https://tapir.softwaremill.com/en/latest/docs/openapi.html
 [TapirPekkoHttp]: https://tapir.softwaremill.com/en/latest/server/pekkohttp.html
