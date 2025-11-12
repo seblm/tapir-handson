@@ -98,3 +98,40 @@ class PodcastApiSuite extends FunSuite:
           """Please use PekkoHttpServerInterpreter to declare the Tapir endpoint implementation to pekko-http routes:
             |} ~ PekkoHttpServerInterpreter().toRoute(…)""".stripMargin
         )
+
+  test("PodcastApi should generate openapi contract"):
+    assertNoDiff(
+      podcastApi.yamlDocs,
+      """openapi: 3.1.0
+        |info:
+        |  title: Podcast API
+        |  version: 0.1.0-SNAPSHOT
+        |paths:
+        |  /api/v1/categories:
+        |    get:
+        |      tags:
+        |      - categorie
+        |      summary: get all categories
+        |      description: get all categories and number of occurrences of podcasts for each
+        |        categorie
+        |      operationId: all categories
+        |      responses:
+        |        '200':
+        |          description: ''
+        |          content:
+        |            application/json:
+        |              schema:
+        |                $ref: '#/components/schemas/Map_Int'
+        |components:
+        |  schemas:
+        |    Map_Int:
+        |      title: Map_Int
+        |      type: object
+        |      additionalProperties:
+        |        type: integer
+        |        format: int32
+        |""".stripMargin,
+      """Generate the Open API specification:
+        | OpenAPIDocsInterpreter().toOpenAPI(…)
+        |and export it using Circe's serializer `toYaml` from `sttp.apispec.openapi.circe.yaml.given`""".stripMargin
+    )
