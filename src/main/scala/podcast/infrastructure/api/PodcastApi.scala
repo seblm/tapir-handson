@@ -23,4 +23,4 @@ class PodcastApi(repository: PodcastRepository):
   lazy val getCategoriesServerEndpoint: Full[Unit, Unit, Unit, Unit, Map[String, Int], Any, Future] =
     getCategoriesEndPoint.serverLogic(_ => Future.successful(Right(repository.getCategories)))
 
-  val yamlDocs: String = "???"
+  val yamlDocs: String = OpenAPIDocsInterpreter().toOpenAPI(getCategoriesEndPoint, "Podcast API", "v1").toYaml
