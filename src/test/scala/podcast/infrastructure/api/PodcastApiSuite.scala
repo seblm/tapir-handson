@@ -103,10 +103,10 @@ class PodcastApiSuite extends FunSuite:
   test("PodcastApi should generate openapi contract"):
     assertNoDiff(
       podcastApi.yamlDocs,
-      """openapi: 3.0.3
+      """openapi: 3.1.0
         |info:
         |  title: Podcast API
-        |  version: 0.1.0-SNAPSHOT
+        |  version: v1
         |paths:
         |  /api/v1/categories:
         |    get:
@@ -126,9 +126,11 @@ class PodcastApiSuite extends FunSuite:
         |components:
         |  schemas:
         |    Map_Int:
+        |      title: Map_Int
         |      type: object
         |      additionalProperties:
         |        type: integer
+        |        format: int32
         |""".stripMargin,
-      "implement it by I don't remember"
+      "Implement the openAPI generation, and display it using Circe's serializer `toYaml` from `sttp.apispec.openapi.circe.yaml.*`"
     )
