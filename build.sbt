@@ -15,6 +15,7 @@ lazy val root = project
     libraryDependencies += "com.softwaremill.sttp.tapir" %% "tapir-json-play" % "1.12.4",
     libraryDependencies += "com.softwaremill.sttp.tapir" %% "tapir-openapi-docs" % "1.12.4",
     libraryDependencies += "com.softwaremill.sttp.tapir" %% "tapir-pekko-http-server" % "1.12.4",
+    libraryDependencies += "com.softwaremill.sttp.tapir" %% "tapir-swagger-ui-bundle" % "1.12.4",
     libraryDependencies += "org.apache.pekko" %% "pekko-actor-typed" % "1.3.0",
     libraryDependencies += "org.apache.pekko" %% "pekko-http" % "1.3.0",
     libraryDependencies += "org.apache.pekko" %% "pekko-http-testkit" % "1.3.0" % Test,

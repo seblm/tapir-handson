@@ -11,6 +11,7 @@ import org.apache.pekko.http.scaladsl.server.RouteConcatenation.given
 import org.slf4j.LoggerFactory
 import podcast.infrastructure.csv.PodcastCSV
 import sttp.tapir.server.pekkohttp.PekkoHttpServerInterpreter
+import sttp.tapir.swagger.bundle.SwaggerInterpreter
 
 import scala.concurrent.ExecutionContextExecutor
 import scala.io.StdIn
@@ -31,6 +32,7 @@ object PodcastServer:
           ContentTypes.`text/html(UTF-8)`,
           """<html>
             |<h1>Podcast API</h1>
+            |<p><a href="/docs/index.html">Swagger UI</a></p>
             |</html>""".stripMargin
         )
       )
