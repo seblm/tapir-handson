@@ -85,13 +85,15 @@ class PodcastApiSuite extends FunSuite:
         |""".stripMargin
     )
 
+  private val pleaseStartServer =
+    "Please start your server: main entry point is podcast.infrastructure.api.PodcastServer.main."
+
   test("PodcastApi should expose endpoint with pekko-http"):
     import sys.process.*
 
     Try("curl --silent localhost:8080/api/v1/categories".!!) match
 
-      case Failure(exception) =>
-        fail("Please start your server: main entry point is podcast.infrastructure.api.PodcastServer.main.", exception)
+      case Failure(exception)  => fail(pleaseStartServer, exception)
       case Success(categories) =>
         assert(
           categories.contains(""","Talk Radio":41,""""),
@@ -135,3 +137,15 @@ class PodcastApiSuite extends FunSuite:
         | OpenAPIDocsInterpreter().toOpenAPI(…)
         |and export it using Circe's serializer `toYaml` from `sttp.apispec.openapi.circe.yaml.given`""".stripMargin
     )
+
+  test("PodcastApi should expose OpenAPI contract with swagger-ui"):
+    import sys.process.*
+
+    Try("curl --silent localhost:8080/docs/index.html".!!) match
+
+      case Failure(exception) => fail(pleaseStartServer, exception)
+      case Success(swaggerui) =>
+        assert(
+          swaggerui.contains("""<title>Swagger UI</title>"""),
+          "Swagger-UI can be served using `SwaggerInterpreter` with our existing endpoints, and added as a new route."
+        )
