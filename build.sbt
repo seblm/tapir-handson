@@ -10,8 +10,10 @@ lazy val root = project
 
     libraryDependencies += "ch.qos.logback" % "logback-classic" % "1.5.21" % Runtime,
     libraryDependencies += "com.github.pjfanning" %% "pekko-http-play-json" % "3.7.0" % Test,
+    libraryDependencies += "com.softwaremill.sttp.apispec" %% "openapi-circe-yaml" % "0.11.10",
     libraryDependencies += "com.softwaremill.sttp.tapir" %% "tapir-core" % "1.12.4",
     libraryDependencies += "com.softwaremill.sttp.tapir" %% "tapir-json-play" % "1.12.4",
+    libraryDependencies += "com.softwaremill.sttp.tapir" %% "tapir-openapi-docs" % "1.12.4",
     libraryDependencies += "com.softwaremill.sttp.tapir" %% "tapir-pekko-http-server" % "1.12.4",
     libraryDependencies += "org.apache.pekko" %% "pekko-actor-typed" % "1.3.0",
     libraryDependencies += "org.apache.pekko" %% "pekko-http" % "1.3.0",
