@@ -157,3 +157,17 @@ class PodcastApiSuite extends FunSuite:
         "Change `pathPrefix` of the `redocUIOptions` parameter." +
         "Remember to start your server !"
     )
+
+  test("PodcastApi should expose a secured endpoint"):
+    import sys.process._
+
+    val securedEndpoint = Try("curl --silent localhost:8080/secret".!!)
+    println(securedEndpoint.get)
+    assert(
+      securedEndpoint.get.contains("Invalid value for: header Authorization (missing)"),
+      "Tapir also allows us to secure our endpoints. We'll be using a very crude and outdated way to do it, but you" +
+        "can see other examples in `Platform-API` ! \n" +
+        "We'll have to define: \n" +
+        "- The authentification used: \n" +
+        "- The logic to apply after authentication \n"
+    )
