@@ -10,12 +10,15 @@ import org.apache.pekko.http.scaladsl.server.Route
 import org.apache.pekko.http.scaladsl.server.RouteConcatenation.given
 import org.slf4j.LoggerFactory
 import podcast.infrastructure.csv.PodcastCSV
+import sttp.model.headers.WWWAuthenticateChallenge
+import sttp.tapir.model.UsernamePassword
 import sttp.tapir.redoc.RedocUIOptions
 import sttp.tapir.redoc.bundle.RedocInterpreter
 import sttp.tapir.server.pekkohttp.PekkoHttpServerInterpreter
 import sttp.tapir.swagger.bundle.SwaggerInterpreter
+import sttp.tapir.{auth, endpoint, stringBody, stringToPath}
 
-import scala.concurrent.ExecutionContextExecutor
+import scala.concurrent.{ExecutionContextExecutor, Future}
 import scala.io.StdIn
 
 object PodcastServer:
@@ -29,6 +32,8 @@ object PodcastServer:
   val api = new PodcastApi(new PodcastCSV("depot-legal-du-web-liste-podcasts.csv"))
   private val swaggerUI =
     SwaggerInterpreter().fromServerEndpoints(List(api.getCategoriesServerEndpoint), "Podcast API", "0.1.0-SNAPSHOT")
+  private val redoc = RedocInterpreter(redocUIOptions = RedocUIOptions.default.pathPrefix(List("redoc")))
+    .fromServerEndpoints(List(api.getCategoriesServerEndpoint), "Podcast API", "0.1.0-SNAPSHOT")
 
   val route: Route = path("index.html"):
     get:
@@ -39,10 +44,11 @@ object PodcastServer:
             |<h1>Podcast API</h1>
             |<p><a href="/docs/index.html">Swagger UI</a></p>
             |<p><a href="/redoc/index.html">Redoc</a></p>
+            |<p><a href="/secret">Security</a></p>
             |</html>""".stripMargin
         )
       )
-  ~ PekkoHttpServerInterpreter().toRoute(api.getCategoriesServerEndpoint +: swaggerUI)
+  ~ PekkoHttpServerInterpreter().toRoute(List(api.getCategoriesServerEndpoint) ++ swaggerUI ++ redoc)
 
   @main def main(): Unit =
     val bindingFuture = Http().newServerAt("localhost", 8080).bind(route)

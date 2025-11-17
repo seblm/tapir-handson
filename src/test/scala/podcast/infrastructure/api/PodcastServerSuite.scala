@@ -34,3 +34,15 @@ class PodcastServerSuite extends FunSuite with MUnitRouteTest with PlayJsonSuppo
         """Likewise, Redoc can be used with `RedocInterpreter`, but this time let’s put it on a specific route.
           |Change `pathPrefix` of the `redocUIOptions` parameter.""".stripMargin
       )
+
+  test("PodcastApi should expose a secured endpoint"):
+    Get("/secret") ~> PodcastServer.route ~> check:
+
+      import org.apache.pekko.http.scaladsl.unmarshalling.Unmarshaller.given
+      assert(
+        responseAs[String].contains("Invalid value for: header Authorization (missing)"),
+        """Tapir also allows us to secure our endpoints. We’ll be using a very crude and outdated way to do it.
+            |We’ll have to define:
+            |- The authentification used:
+            |- The logic to apply after authentication""".stripMargin
+      )
