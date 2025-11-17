@@ -24,3 +24,13 @@ class PodcastServerSuite extends FunSuite with MUnitRouteTest with PlayJsonSuppo
         responseAs[String].contains("""<title>Swagger UI</title>"""),
         "Swagger-UI can be served using `SwaggerInterpreter` with our existing endpoints, and added as a new route."
       )
+
+  test("PodcastApi should expose OpenAPI contract with redoc"):
+    Get("/redoc/index.html") ~> PodcastServer.route ~> check:
+
+      import org.apache.pekko.http.scaladsl.unmarshalling.Unmarshaller.given
+      assert(
+        responseAs[String].contains("<redoc "),
+        """Likewise, Redoc can be used with `RedocInterpreter`, but this time let’s put it on a specific route.
+          |Change `pathPrefix` of the `redocUIOptions` parameter.""".stripMargin
+      )

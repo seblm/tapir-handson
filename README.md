@@ -55,6 +55,10 @@ Starting from endpoints, you can [generate openapi contract automatically][Tapir
 
 Tapir lets you expose your OpenAPI on your web server.
 
+## Step 10: expose OpenAPI with redoc
+
+You can also expose your OpenAPI with redoc.
+
 [Tapir]: https://tapir.softwaremill.com
 [TapirJSON]: https://tapir.softwaremill.com/en/latest/endpoint/json.html
 [TapirOpenAPI]: https://tapir.softwaremill.com/en/latest/docs/openapi.html
