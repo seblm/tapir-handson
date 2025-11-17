@@ -149,3 +149,16 @@ class PodcastApiSuite extends FunSuite:
           swaggerui.contains("""<title>Swagger UI</title>"""),
           "Swagger-UI can be served using `SwaggerInterpreter` with our existing endpoints, and added as a new route."
         )
+
+  test("PodcastApi should expose OpenAPI contract with redoc"):
+    import sys.process.*
+
+    Try("curl --silent localhost:8080/redoc/index.html".!!) match
+
+      case Failure(exception) => fail(pleaseStartServer, exception)
+      case Success(redoc)     =>
+        assert(
+          redoc.contains("<redoc "),
+          """Likewise, Redoc can be used with `RedocInterpreter`, but this time let’s put it on a specific route.
+            |Change `pathPrefix` of the `redocUIOptions` parameter.""".stripMargin
+        )
