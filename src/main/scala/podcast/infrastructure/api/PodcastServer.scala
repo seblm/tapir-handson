@@ -9,10 +9,13 @@ import org.apache.pekko.http.scaladsl.server.Directives.*
 import org.apache.pekko.http.scaladsl.server.RouteConcatenation.given
 import org.slf4j.LoggerFactory
 import podcast.infrastructure.csv.PodcastCSV
+import sttp.model.headers.WWWAuthenticateChallenge
+import sttp.tapir.model.UsernamePassword
 import sttp.tapir.redoc.RedocUIOptions
 import sttp.tapir.redoc.bundle.RedocInterpreter
 import sttp.tapir.server.pekkohttp.PekkoHttpServerInterpreter
 import sttp.tapir.swagger.bundle.SwaggerInterpreter
+import sttp.tapir.{auth, endpoint, stringBody, stringToPath}
 
 import scala.concurrent.ExecutionContextExecutor
 import scala.io.StdIn
@@ -29,6 +32,8 @@ object PodcastServer:
     val api = new PodcastApi(new PodcastCSV("depot-legal-du-web-liste-podcasts.csv"))
     val swaggerUI =
       SwaggerInterpreter().fromServerEndpoints(List(api.getCategoriesServerEndpoint), "Podcast API", "0.1.0-SNAPSHOT")
+    val redoc = RedocInterpreter(redocUIOptions = RedocUIOptions.default.pathPrefix(List("redoc")))
+      .fromServerEndpoints(List(api.getCategoriesServerEndpoint), "Podcast API", "0.1.0-SNAPSHOT")
     val route = path("index.html") {
       get {
         complete(
@@ -42,7 +47,7 @@ object PodcastServer:
           )
         )
       }
-    } ~ PekkoHttpServerInterpreter().toRoute(api.getCategoriesServerEndpoint +: swaggerUI)
+    } ~ PekkoHttpServerInterpreter().toRoute(List(api.getCategoriesServerEndpoint) ++ swaggerUI ++ redoc)
     val bindingFuture = Http().newServerAt("localhost", 8080).bind(route)
 
     logger.info(s"Server now online. Please navigate to http://localhost:8080/index.html")

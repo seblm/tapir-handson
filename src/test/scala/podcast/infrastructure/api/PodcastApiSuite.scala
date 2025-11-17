@@ -162,3 +162,18 @@ class PodcastApiSuite extends FunSuite:
           """Likewise, Redoc can be used with `RedocInterpreter`, but this time let’s put it on a specific route.
             |Change `pathPrefix` of the `redocUIOptions` parameter.""".stripMargin
         )
+
+  test("PodcastApi should expose a secured endpoint"):
+    import sys.process.*
+
+    Try("curl --silent localhost:8080/secret".!!) match
+
+      case Failure(exception)       => fail(pleaseStartServer, exception)
+      case Success(securedEndpoint) =>
+        assert(
+          securedEndpoint.contains("Invalid value for: header Authorization (missing)"),
+          """Tapir also allows us to secure our endpoints. We’ll be using a very crude and outdated way to do it.
+            |We’ll have to define:
+            |- The authentification used:
+            |- The logic to apply after authentication""".stripMargin
+        )
