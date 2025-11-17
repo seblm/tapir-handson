@@ -10,6 +10,8 @@ import org.apache.pekko.http.scaladsl.server.Route
 import org.apache.pekko.http.scaladsl.server.RouteConcatenation.given
 import org.slf4j.LoggerFactory
 import podcast.infrastructure.csv.PodcastCSV
+import sttp.tapir.redoc.RedocUIOptions
+import sttp.tapir.redoc.bundle.RedocInterpreter
 import sttp.tapir.server.pekkohttp.PekkoHttpServerInterpreter
 import sttp.tapir.swagger.bundle.SwaggerInterpreter
 
@@ -25,6 +27,9 @@ object PodcastServer:
   implicit val executionContext: ExecutionContextExecutor = system.executionContext
 
   val api = new PodcastApi(new PodcastCSV("depot-legal-du-web-liste-podcasts.csv"))
+  private val swaggerUI =
+    SwaggerInterpreter().fromServerEndpoints(List(api.getCategoriesServerEndpoint), "Podcast API", "0.1.0-SNAPSHOT")
+
   val route: Route = path("index.html"):
     get:
       complete(
@@ -33,10 +38,11 @@ object PodcastServer:
           """<html>
             |<h1>Podcast API</h1>
             |<p><a href="/docs/index.html">Swagger UI</a></p>
+            |<p><a href="/redoc/index.html">Redoc</a></p>
             |</html>""".stripMargin
         )
       )
-  ~ PekkoHttpServerInterpreter().toRoute(api.getCategoriesServerEndpoint)
+  ~ PekkoHttpServerInterpreter().toRoute(api.getCategoriesServerEndpoint +: swaggerUI)
 
   @main def main(): Unit =
     val bindingFuture = Http().newServerAt("localhost", 8080).bind(route)
