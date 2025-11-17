@@ -143,6 +143,17 @@ class PodcastApiSuite extends FunSuite:
       val `swagger-ui` = Try("curl --silent localhost:8080/docs/index.html".!!)
       assert(
         `swagger-ui`.get.contains("""<title>Swagger UI</title>"""),
-        s"The swagger can be generated using `SwaggerInterpreter` with our existing endpoints, and added as a new route.\n" +
+        "The swagger can be generated using `SwaggerInterpreter` with our existing endpoints, and added as a new route.\n" +
     "Remember to start your server !"
       )
+
+  test("PodcastApi should expose OpenAPI contract with redoc"):
+    import sys.process._
+
+    val redoc = Try("curl --silent localhost:8080/redoc/index.html".!!)
+    assert(
+      redoc.get.contains("Podcast API Redoc"),
+      "Likewise, Redoc can be used with `RedocInterpreter`, but this time let's put it on a specific route.\n" +
+        "Change `pathPrefix` of the `redocUIOptions` parameter." +
+        "Remember to start your server !"
+    )

@@ -19,6 +19,8 @@ lazy val root = project
     libraryDependencies += "org.apache.pekko" %% "pekko-stream" % "1.2.1",
     libraryDependencies += "org.scalameta" %% "munit" % "1.2.1" % Test,
     libraryDependencies += "org.slf4j" % "slf4j-api" % "2.0.17",
-    libraryDependencies += "com.softwaremill.sttp.tapir" %% "tapir-swagger-ui-bundle" % "1.12.3"
+    libraryDependencies += "com.softwaremill.sttp.tapir" %% "tapir-swagger-ui-bundle" % "1.12.3",
+    libraryDependencies += "com.softwaremill.sttp.tapir" %% "tapir-redoc-bundle" % "1.12.3"
+
 
 )
