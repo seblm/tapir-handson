@@ -63,6 +63,10 @@ You can also expose your OpenAPI with redoc.
 
 We will add a simple authentication system.
 
+## Step 12: customize the schema
+
+There are also ways to add informations to an existing schema.
+
 [Tapir]: https://tapir.softwaremill.com
 [TapirJSON]: https://tapir.softwaremill.com/en/latest/endpoint/json.html
 [TapirOpenAPI]: https://tapir.softwaremill.com/en/latest/docs/openapi.html
