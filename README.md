@@ -51,6 +51,22 @@ Add endpoint implementation to pekko-http’s routes:
 
 Starting from endpoints, you can [generate openapi contract automatically][TapirOpenAPI].
 
+## Step 9: Expose open-api with swagger-ui
+
+Tapir lets you expose your OpenAPI on your web server.
+
+## Step 10: expose OpenAPI with redoc
+
+You can also expose your OpenAPI with redoc.
+
+## Step 11: secure endpoints
+
+We will add a simple authentication system.
+
+## Step 12: customize the schema
+
+There are also ways to add informations to an existing schema.
+
 [Tapir]: https://tapir.softwaremill.com
 [TapirJSON]: https://tapir.softwaremill.com/en/latest/endpoint/json.html
 [TapirOpenAPI]: https://tapir.softwaremill.com/en/latest/docs/openapi.html

@@ -86,13 +86,15 @@ class PodcastApiSuite extends FunSuite:
         |""".stripMargin
     )
 
+  private val pleaseStartServer = "please start your server: main entry point is podcast.infrastructure.api.PodcastServer.main"
+
   test("PodcastApi should expose endpoint with pekko-http"):
     import sys.process.*
 
     Try("curl --silent localhost:8080/api/v1/categories".!!) match
 
       case util.Failure(exception) =>
-        fail("please start your server: main entry point is podcast.infrastructure.api.PodcastServer.main", exception)
+        fail(pleaseStartServer, exception)
       case util.Success(categories) =>
         assert(
           categories.contains(""","Talk Radio":41,""""),
@@ -103,10 +105,10 @@ class PodcastApiSuite extends FunSuite:
   test("PodcastApi should generate openapi contract"):
     assertNoDiff(
       podcastApi.yamlDocs,
-      """openapi: 3.0.3
+      """openapi: 3.1.0
         |info:
         |  title: Podcast API
-        |  version: 0.1.0-SNAPSHOT
+        |  version: v1
         |paths:
         |  /api/v1/categories:
         |    get:
@@ -126,9 +128,56 @@ class PodcastApiSuite extends FunSuite:
         |components:
         |  schemas:
         |    Map_Int:
+        |      title: Map_Int
         |      type: object
         |      additionalProperties:
         |        type: integer
+        |        format: int32
         |""".stripMargin,
-      "implement it by I don't remember"
+      "Implement the openAPI generation, and display it using Circe's serializer `toYaml` from `sttp.apispec.openapi.circe.yaml.*`"
+    )
+
+  test("PodcastApi should expose OpenAPI contract with swagger-ui"):
+    import sys.process._
+
+      val `swagger-ui` = Try("curl --silent localhost:8080/docs/index.html".!!)
+      assert(
+        `swagger-ui`.get.contains("""<title>Swagger UI</title>"""),
+        "The swagger can be generated using `SwaggerInterpreter` with our existing endpoints, and added as a new route.\n" +
+    "Remember to start your server !"
+      )
+
+  test("PodcastApi should expose OpenAPI contract with redoc"):
+    import sys.process._
+
+    val redoc = Try("curl --silent localhost:8080/redoc/index.html".!!)
+    assert(
+      redoc.get.contains("Podcast API Redoc"),
+      "Likewise, Redoc can be used with `RedocInterpreter`, but this time let's put it on a specific route.\n" +
+        "Change `pathPrefix` of the `redocUIOptions` parameter." +
+        "Remember to start your server !"
+    )
+
+  test("PodcastApi should expose a secured endpoint"):
+    import sys.process._
+
+    val securedEndpoint = Try("curl --silent localhost:8080/secret".!!)
+    println(securedEndpoint.get)
+    assert(
+      securedEndpoint.get.contains("Invalid value for: header Authorization (missing)"),
+      "Tapir also allows us to secure our endpoints. We'll be using a very crude and outdated way to do it, but you" +
+        "can see other examples in `Platform-API` ! \n" +
+        "We'll have to define: \n" +
+        "- The authentification used: \n" +
+        "- The logic to apply after authentication \n"
+    )
+
+  test("PodcastApi should have a customized schema"):
+    import sys.process._
+
+    val `swagger-ui` = Try("curl --silent http://localhost:8080/docs/docs.yaml".!!)
+    assert(
+      `swagger-ui`.get.contains("""Those are categories names with their counts"""),
+      "It is possible to add customization to the auto-generated schema.\n" +
+        "For example, let's add a description to the maine parameter."
     )
