@@ -8,9 +8,22 @@ import sttp.tapir.EndpointIO.Body
 import sttp.tapir.EndpointOutput.Pair
 import sttp.tapir.{Codec, CodecFormat}
 
+import java.io.{ByteArrayOutputStream, PrintStream}
+import scala.concurrent.{ExecutionContext, Future}
 import scala.util.{Failure, Success, Try}
 
 class PodcastApiSuite extends FunSuite:
+
+  override def beforeAll(): Unit =
+    val stream = new ByteArrayOutputStream()
+    val out = System.out
+    System.setOut(new PrintStream(stream))
+    given ExecutionContext = scala.concurrent.ExecutionContext.Implicits.global
+    Future(PodcastServer.main())
+    while (!stream.toString.endsWith("Press RETURN to stop...\n"))
+      Thread.sleep(500)
+    System.setOut(out)
+    println(stream)
 
   private val podcastApi = new PodcastApi(new PodcastCSV("depot-legal-du-web-liste-podcasts-10.csv"))
 
@@ -128,6 +141,7 @@ class PodcastApiSuite extends FunSuite:
         |  schemas:
         |    Map_Int:
         |      title: Map_Int
+        |      description: Those are categories names with their counts
         |      type: object
         |      additionalProperties:
         |        type: integer
