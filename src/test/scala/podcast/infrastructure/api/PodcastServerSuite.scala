@@ -46,3 +46,13 @@ class PodcastServerSuite extends FunSuite with MUnitRouteTest with PlayJsonSuppo
             |- The authentification used:
             |- The logic to apply after authentication""".stripMargin
       )
+
+  test("PodcastApi should have a customized schema"):
+    Get("/docs/docs.yaml") ~> PodcastServer.route ~> check:
+
+      import org.apache.pekko.http.scaladsl.unmarshalling.Unmarshaller.given
+      assert(
+        responseAs[String].contains("""Those are categories names with their counts"""),
+        """It is possible to add customization to the auto-generated schema.
+          |For example, let’s add a description to the main parameter.""".stripMargin
+      )
