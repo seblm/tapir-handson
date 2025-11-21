@@ -35,6 +35,14 @@ object PodcastServer:
   private val redoc = RedocInterpreter(redocUIOptions = RedocUIOptions.default.pathPrefix(List("redoc")))
     .fromServerEndpoints(List(api.getCategoriesServerEndpoint), "Podcast API", "0.1.0-SNAPSHOT")
 
+  private val secretEndpoint = endpoint.get
+    .securityIn("secret")
+    .securityIn(auth.basic[UsernamePassword](WWWAuthenticateChallenge.basic("example")))
+    .out(stringBody)
+  private val secretServerEndpoint = secretEndpoint
+    .serverSecurityLogicPure(credentials => Right(credentials.username))
+    .serverLogicSuccess(username => _ => Future.successful(s"Hello, $username!"))
+
   val route: Route = path("index.html"):
     get:
       complete(
@@ -48,7 +56,9 @@ object PodcastServer:
             |</html>""".stripMargin
         )
       )
-  ~ PekkoHttpServerInterpreter().toRoute(List(api.getCategoriesServerEndpoint) ++ swaggerUI ++ redoc)
+  ~ PekkoHttpServerInterpreter().toRoute(
+    List(api.getCategoriesServerEndpoint, secretServerEndpoint) ++ swaggerUI ++ redoc
+  )
 
   @main def main(): Unit =
     val bindingFuture = Http().newServerAt("localhost", 8080).bind(route)
