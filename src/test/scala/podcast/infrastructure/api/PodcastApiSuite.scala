@@ -8,6 +8,7 @@ import sttp.tapir.EndpointIO.Body
 import sttp.tapir.EndpointOutput.Pair
 import sttp.tapir.{Codec, CodecFormat}
 
+import scala.concurrent.ExecutionContext
 import scala.util.{Failure, Success, Try}
 
 class PodcastApiSuite extends FunSuite:
@@ -112,6 +113,7 @@ class PodcastApiSuite extends FunSuite:
         |  schemas:
         |    Map_Int:
         |      title: Map_Int
+        |      description: Those are categories names with their counts
         |      type: object
         |      additionalProperties:
         |        type: integer
