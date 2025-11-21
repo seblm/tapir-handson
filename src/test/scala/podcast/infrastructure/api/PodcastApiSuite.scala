@@ -171,3 +171,13 @@ class PodcastApiSuite extends FunSuite:
         "- The authentification used: \n" +
         "- The logic to apply after authentication \n"
     )
+
+  test("PodcastApi should have a customized schema"):
+    import sys.process._
+
+    val `swagger-ui` = Try("curl --silent http://localhost:8080/docs/docs.yaml".!!)
+    assert(
+      `swagger-ui`.get.contains("""Those are categories names with their counts"""),
+      "It is possible to add customization to the auto-generated schema.\n" +
+        "For example, let's add a description to the maine parameter."
+    )

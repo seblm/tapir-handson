@@ -31,9 +31,18 @@ object PodcastServer:
 
     val api = new PodcastApi(new PodcastCSV("depot-legal-du-web-liste-podcasts.csv"))
     val swaggerEndpoints = SwaggerInterpreter()
-      .fromEndpoints[Future](List(api.getCategoriesEndPoint), "Podcast API", "1.0")
+      .fromEndpoints[Future](List(api.getCategoriesEndPoint), "Podcast API", "1.0") // /docs
     val redocEndpoints = RedocInterpreter(redocUIOptions = RedocUIOptions.default.copy(pathPrefix = List("redoc")))
       .fromEndpoints[Future](List(api.getCategoriesEndPoint), "Podcast API Redoc", "1.0")
+
+    // Security
+    val secretEndpoint =
+      endpoint.get.securityIn("secret").securityIn(
+        auth.basic[UsernamePassword](WWWAuthenticateChallenge.basic("example"))).out(stringBody)
+    val secretServerEndpoint = secretEndpoint
+        .serverSecurityLogic(credentials => Future.successful(Right(credentials.username)))
+        .serverLogic(username => _ => Future.successful(Right(s"Hello, $username!")))
+
 
     val route = path("index.html") {
       get {
@@ -42,11 +51,15 @@ object PodcastServer:
             ContentTypes.`text/html(UTF-8)`,
             """<html>
               |<h1>Podcast API</h1>
+              |<a href="/docs"> - Swagger UI</a> <br/>
+              |<a href="/redoc"> - Redoc</a> <br/>
+              |<a href="/secret"> - Security</a>
               |</html>""".stripMargin
           )
         )
       }
-    } ~ PekkoHttpServerInterpreter().toRoute(List(api.getCategoriesServerEndpoint) ++ swaggerEndpoints ++ redocEndpoints)
+    } ~ PekkoHttpServerInterpreter().toRoute(
+      List(api.getCategoriesServerEndpoint) ++ swaggerEndpoints ++ redocEndpoints ++ List(secretServerEndpoint))
     val bindingFuture = Http().newServerAt("localhost", 8080).bind(route)
 
     logger.info(s"Server now online. Please navigate to http://localhost:8080/index.html")
