@@ -11,6 +11,10 @@ import scala.concurrent.Future
 
 class PodcastApi(repository: PodcastRepository):
 
+
+  implicit val schema: Schema[Map[String, Int]] =
+    Schema.schemaForMap[Int].description("Those are categories names with their counts")
+
   val getCategoriesEndPoint: Endpoint[Unit, Unit, Unit, Map[String, Int], Any] = endpoint
     .name("all categories")
     .description("get all categories and number of occurrences of podcasts for each categorie")
